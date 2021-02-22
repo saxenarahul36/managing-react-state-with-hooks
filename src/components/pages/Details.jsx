@@ -1,12 +1,14 @@
-import React , {useState }from "react";
+import React, { useState, useContext } from "react";
 import Products from "./Product";
 import { useParams } from "react-router-dom";
-import useFetch from "./hooks/useFetch";
-import Spinner from "./Spinner";
+import useFetch from "../../hooks/useFetch";
+import Spinner from "../common/Spinner";
 import { useNavigate } from "react-router-dom";
-import PageNotFound from "./PageNotFound";
+import PageNotFound from "../common/PageNotFound";
+import { GlobalContext } from "../context/GlobalState";
 
-export default function Details({ addToCart }) {
+export default function Details() {
+  const { addToCart } = useContext(GlobalContext);
   const navigation = useNavigate();
   const { id } = useParams();
   const [size, setSize] = useState("");
@@ -42,7 +44,7 @@ export default function Details({ addToCart }) {
           disabled={!size}
           className="btn btn-primary"
           onClick={() => {
-            addToCart(id,size)
+            addToCart(id, size);
             navigation("/cart");
           }}
         >
