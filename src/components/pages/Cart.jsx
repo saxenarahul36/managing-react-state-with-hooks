@@ -1,8 +1,13 @@
-import React from "react";
-import useFetchAll from "./services/useFetchAll";
-import Spinner from "./Spinner";
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import useFetchAll from "../../services/useFetchAll";
+import Spinner from "../common/Spinner";
+import { GlobalContext } from "../context/GlobalState";
 
-export default function Cart({ cart, updateQuantity, removeItems }) {
+export default function Cart() {
+  const { updateQuantity, cart } = useContext(GlobalContext);
+  const navigate = useNavigate();
+
   const urls = cart.map((i) => `products/${i.id}`);
   const { data: products, loading, error } = useFetchAll(urls);
 
@@ -42,15 +47,30 @@ export default function Cart({ cart, updateQuantity, removeItems }) {
 
   if (loading) return <Spinner />;
   if (error) throw error;
-  const totalItemsInCart = cart.reduce((total,currentItem)=> total+ currentItem.quantity,0)
+  const totalItemsInCart = cart.reduce(
+    (total, currentItem) => total + currentItem.quantity,
+    0
+  );
 
   return (
     <section id="cart">
       <h1>Cart</h1>
       <h3>
-        {totalItemsInCart === 0 ? 'Your cart is empty' :` Total number of items in cart :${totalItemsInCart}`}
+        {totalItemsInCart === 0
+          ? "Your cart is empty"
+          : ` Total number of items in cart :${totalItemsInCart}`}
       </h3>
       <ul>{cart.map(renderItem)}</ul>
+      <p>
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            navigate("/checkout");
+          }}
+        >
+          Checkout
+        </button>
+      </p>
     </section>
   );
 }
